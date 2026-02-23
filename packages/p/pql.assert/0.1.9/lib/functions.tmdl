@@ -1521,7 +1521,6 @@ function 'PQL.Assert.BP.CheckPerformance' =
 /// Col Assertions - PQL.Assert.Col namespace
 /// Column-level assertion functions for data quality validation
 /// Publisher: PQL (Power Query Lint)
-
 /// Asserts that all values in a column are NULL (DAX BLANK()).
 function 'PQL.Assert.Col.ShouldBeNull' =
 		(testName : STRING, columnRef : ANYREF EXPR) =>
@@ -2080,7 +2079,6 @@ function 'PQL.Assert.Col.TextLengthShouldBeInRange' =
 /// Table Assertions - PQL.Assert.Tbl namespace
 /// Table-level assertion functions for schema and structure validation
 /// Publisher: PQL (Power Query Lint)
-
 /// Asserts that a table has at least one row.
 function 'PQL.Assert.Tbl.ShouldHaveRows' =
 		(testName : STRING, tableRef : TABLE EXPR) =>
