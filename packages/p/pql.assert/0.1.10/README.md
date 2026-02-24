@@ -99,8 +99,8 @@ EVALUATE PQL.Assert.ShouldEqual("Test 1: 2+2 should equal 4", 4, 2+2)
 
 #### Categorical, Membership & Format
 
-- `PQL.Assert.Col.ValuesShouldBeInSet(testName, columnRef, allowedValues)` - Asserts all column values are in the specified allowed set (table)
-- `PQL.Assert.Col.ValuesShouldNotBeInSet(testName, columnRef, bannedValues)` - Asserts no column values are in the specified banned set (table)
+- `PQL.Assert.Col.ValuesShouldBeInSet(testName, columnRef, allowedValuesTable, allowedValuesColumn)` - Asserts all column values are in the specified allowed set (model-independent: explicitly specify table and column)
+- `PQL.Assert.Col.ValuesShouldNotBeInSet(testName, columnRef, bannedValuesTable, bannedValuesColumn)` - Asserts no column values are in the specified banned set (model-independent: explicitly specify table and column)
 - `PQL.Assert.Col.DistinctCountShouldBeAtMost(testName, columnRef, maxDistinct)` - Asserts distinct count of values is at most the specified number
 - `PQL.Assert.Col.DistinctCountShouldBeAtLeast(testName, columnRef, minDistinct)` - Asserts distinct count of values is at least the specified number
 - `PQL.Assert.Col.TextShouldHaveNoLeadingOrTrailingSpaces(testName, columnRef)` - Asserts no text values have leading or trailing spaces
@@ -452,6 +452,38 @@ EVALUATE PQL.Assert.RetrieveTests()
 
 // Discover tests by environment
 EVALUATE FILTER(PQL.Assert.RetrieveTests(), CONTAINSSTRING([FUNCTION_NAME], ".DEV."))
+```
+
+### Membership Validation Examples
+
+The `ValuesShouldBeInSet` and `ValuesShouldNotBeInSet` functions are model-independent, requiring explicit table and column references:
+
+```dax
+// Validate column values against an allowed set
+VAR _AllowedCategories = {"A", "B", "C"}
+VAR _CategoryTest = PQL.Assert.Col.ValuesShouldBeInSet(
+    "Category values should be in allowed set", 
+    'Products'[Category], 
+    _AllowedCategories, 
+    [Value]
+)
+
+// Validate column values are not in a banned set
+VAR _BannedStatuses = {"Deleted", "Invalid", "Archived"}
+VAR _StatusTest = PQL.Assert.Col.ValuesShouldNotBeInSet(
+    "Status should not be in banned set", 
+    'Orders'[Status], 
+    _BannedStatuses, 
+    [Value]
+)
+
+// Using a reference table
+VAR _ValidCountries = PQL.Assert.Col.ValuesShouldBeInSet(
+    "Countries should be valid", 
+    'Sales'[Country], 
+    'ValidCountries',  // Reference table
+    'ValidCountries'[CountryCode]  // Column to compare against
+)
 ```
 
 ## Documentation

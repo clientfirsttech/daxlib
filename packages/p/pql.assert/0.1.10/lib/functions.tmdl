@@ -2090,9 +2090,16 @@ function 'PQL.Assert.Col.ShouldBeMonotonicDecreasing' =
 /// Categorical / Membership / Format
 /// Asserts that all values in a column are in the specified allowed set (table).
 function 'PQL.Assert.Col.ValuesShouldBeInSet' =
-		(testName : STRING, columnRef : ANYREF EXPR, allowedValues : TABLE) =>
-			VAR _DistinctVals = DISTINCT(columnRef)
-			VAR _InvalidCount = COUNTROWS(EXCEPT(_DistinctVals, allowedValues))
+		(testName : STRING, columnRef : ANYREF EXPR, allowedValuesTable : TABLE EXPR, allowedValuesColumn : ANYREF EXPR) =>
+			VAR _TargetValues = SELECTCOLUMNS(
+				DISTINCT(columnRef),
+				"@Value", CONVERT(columnRef, STRING)
+			)
+			VAR _AllowedValues = SELECTCOLUMNS(
+				allowedValuesTable,
+				"@Value", CONVERT(allowedValuesColumn, STRING)
+			)
+			VAR _InvalidCount = COUNTROWS(EXCEPT(_TargetValues, _AllowedValues))
 			VAR _Passed = _InvalidCount = 0
 			RETURN ROW(
 				"TestName", testName,
@@ -2105,9 +2112,16 @@ function 'PQL.Assert.Col.ValuesShouldBeInSet' =
 
 /// Asserts that no values in a column are in the specified banned set (table).
 function 'PQL.Assert.Col.ValuesShouldNotBeInSet' =
-		(testName : STRING, columnRef : ANYREF EXPR, bannedValues : TABLE) =>
-			VAR _DistinctVals = DISTINCT(columnRef)
-			VAR _BannedFound = COUNTROWS(INTERSECT(_DistinctVals, bannedValues))
+		(testName : STRING, columnRef : ANYREF EXPR, bannedValuesTable : TABLE EXPR, bannedValuesColumn : ANYREF EXPR) =>
+			VAR _TargetValues = SELECTCOLUMNS(
+				DISTINCT(columnRef),
+				"@Value", CONVERT(columnRef, STRING)
+			)
+			VAR _BannedValues = SELECTCOLUMNS(
+				bannedValuesTable,
+				"@Value", CONVERT(bannedValuesColumn, STRING)
+			)
+			VAR _BannedFound = COUNTROWS(INTERSECT(_TargetValues, _BannedValues))
 			VAR _Passed = _BannedFound = 0
 			RETURN ROW(
 				"TestName", testName,
