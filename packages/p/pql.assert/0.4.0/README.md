@@ -187,7 +187,7 @@ PQL.Assert provides two pairs of test discovery functions. The **V1 functions** 
 
 #### V2 — Full metadata (not for Power Automate)
 
-- `PQL.Assert.RetrieveTestsV2()` - Returns all test functions with full metadata columns (`[Name]`, `[Description]`, `[PQLAssert_ImpersonatedUserName]`). Uses `INFO.USERDEFINEDFUNCTIONS` and `INFO.ANNOTATIONS`. **Not compatible with Power Automate.**
+- `PQL.Assert.RetrieveTestsV2()` - Returns all test functions with full metadata columns (`[Name]`, `[Description]`, `[PQLAssert_ImpersonatedUserName]`, `[PQLAssert_RoleName]`). Uses `INFO.USERDEFINEDFUNCTIONS` and `INFO.ANNOTATIONS`. **Not compatible with Power Automate.**
 - `PQL.Assert.RetrieveTestsByEnvironmentV2(environment)` - Returns tests filtered by environment with full metadata. Case-insensitive. Returns all tests if environment is blank. **Not compatible with Power Automate.**
 
 ### Best Practice Validations
